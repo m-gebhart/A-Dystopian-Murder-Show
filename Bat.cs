@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
+/*This flying enemy type chases the player throughout the whole map*/
     private GameObject laurel = null;
     private GameObject hardy = null;
     private GameObject manager;
