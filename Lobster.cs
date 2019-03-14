@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Lobster : MovingEnemy {
+    /*this enemy type moves back and forth on a platform and attacks if the player is close to him*/
 
     public float attackingTime;
     public float reactionTime;
