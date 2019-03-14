@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class Banana : MovingEnemy
 {
+/*this is the first programmed enemy type: a Banana moving back and forth on a platform*/
     void Start()
     {
         SetComponents();
