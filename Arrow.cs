@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Arrow : MonoBehaviour {
 
+	/* this arrow is simply part of the UI: if the score increases / enemies are attacked, this up_arrow is shown next to the current score display */
     public float noFadeTime;
     public float fadeOutTime = 0.5f;
     private float originNoFadeTime;
