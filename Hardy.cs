@@ -10,39 +10,39 @@ public class Hardy : Player
 {
     /* This class contains all abiltits only Laurel has, i.e. MeleeAttack*/
     public MeleeAttack meleeAttackPrefab;
-    public float meleeAttackingTime;
-    public float meleeCooldown;
+    public float meleeAttackingTime, meleeCooldown;
     [HideInInspector]
     public float cooldownTimer = 0;
 
     void Start()
     {
-        SetComponents();
+        setComponents();
     }
 
     void Update()
     {
         cooldownTimer -= Time.deltaTime;
 
-        CheckInput();
-        CheckInputAbilitites();
+        checkInput();
+        checkInputAbilitites();
     }
 
-    void CheckInputAbilitites()
+    void checkInputAbilitites()
     {
         //Input for Jumping
-        if (rb2d.velocity.y == 0 && !isJumping && InputManager.JumpInput())
+        if (InputManager.JumpInput())
         {
-            animator.SetBool("midAir", true);
-            animator.SetBool("isJumping", true);
-            Jump();
+            if (rb2d.velocity.y == 0 && !isJumping) //normal Jump if grounded
+                jump();
+            else if (isJumping) //minded Jump (auto-jump if button pressed before touching ground)
+                StartCoroutine(setMindedJump());
         }
-        // Ibput for Melee Attack
+        // Input for Melee Attack
         if ((InputManager.AttackInput()) && cooldownTimer <= 0)
-            MeleeAttack();
+            meleeAttack();
     }
 
-    void MeleeAttack()
+    void meleeAttack()
     {
         cooldownTimer = meleeCooldown;
         animator.SetBool("isAttacking", true);
@@ -61,13 +61,13 @@ public class Hardy : Player
     }
 
     //called by Melee Attack trigger, when it's destroyed
-    void SetMeleeAttack()
+    void setMeleeAttack()
     {
         animator.SetBool("isAttacking", false);
     }
 
     //if Hardy receives the hat, Laurel will already have right after shapeshifting to him
-    void SetHatThrown()
+    void setHatThrown()
     {
         playermanager.hatReceived = true;
     }

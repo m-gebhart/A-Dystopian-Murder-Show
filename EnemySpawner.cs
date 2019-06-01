@@ -16,10 +16,7 @@ public class EnemySpawner : MonoBehaviour {
     public int maxNumber;
     public int number = 0;
     private float originFrequency;
-    public float minimumFrequency;
-    public float frequencyChange;
-    public float offset;
-    public float growthSpeedOfNewEnemy;
+    public float minimumFrequency, frequencyChange, offset, growthSpeedOfNewEnemy;
     private float timer;
     private bool playerBlocking = false;
 

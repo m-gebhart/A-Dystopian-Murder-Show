@@ -20,6 +20,8 @@ public class MrManager : MonoBehaviour
 
     private GameObject laurel;
     private GameObject hardy;
+
+
     // Use this for initialization
     void Start()
     {
@@ -40,14 +42,11 @@ public class MrManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (exitScript != null)
-        //{
         if(exitScript != null)
-            if (exitScript.tutorial && (laurel == null || hardy == null))  updatePlayer(); //prevent null reference in tutorial (!enemyLevels) levels -M
+            if (exitScript.tutorial && (laurel == null || hardy == null))
+                updatePlayer(); //preventing null reference in tutorial (!enemyLevels) levels -M
             if (!clipSwitched)
             {
-                //if (Playermanager.isLaurel) transform.position = laurel.transform.position;
-                //else transform.position = hardy.transform.position;
                 if (musicTimer > 0)
                 {
                     loopSource.volume = 0;
@@ -59,16 +58,8 @@ public class MrManager : MonoBehaviour
                     //audioSource.Pause();
                     audioSource.volume = 0;
                     clipSwitched = true;
-                    //if (Playermanager.isLaurel) loopObject.transform.position = laurel.transform.position;
-                    //else loopObject.transform.position = hardy.transform.position;
                 }
             }
-            else
-            {
-                //if (Playermanager.isLaurel) loopObject.transform.position = laurel.transform.position;
-                //else loopObject.transform.position = hardy.transform.position;
-            }
-        //}
     }
 
     void updatePlayer()

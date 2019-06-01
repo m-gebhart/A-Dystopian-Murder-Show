@@ -27,40 +27,41 @@ public class Laurel : Player
 
     void Start()
     {
-        SetLaurelComponents();
+        setLaurelComponents();
         doubleJump = false;
     }
 
     void Update()
     {
-        CheckInput();
-        CheckInputAbilitites();
+        checkInput();
+        checkInputAbilitites();
     }
 
-    void SetLaurelComponents()
+    void setLaurelComponents()
     {
-        SetComponents();
+        setComponents();
         originThrowAnimTime = throwAnimTime;
         originCatchAnimTime = catchAnimTime;
         originAttackOffset = attackOffset;
     }
 
-    void CheckInputAbilitites()
+    void checkInputAbilitites()
     {
+        //Input for Jumping
         if (InputManager.JumpInput())
         {
-            if (rb2d.velocity.y == 0 && !isJumping && !doubleJump) //Jump
+            if (!isJumping && rb2d.velocity.y == 0 && !doubleJump) //normal Jump if grounded
+                jump();
+            else if (isJumping)
             {
-                animator.SetBool("isJumping", true);
-                Jump();
-                animator.SetBool("midAir", true);
-            }
-
-            else if (isJumping && !doubleJump) //DoubleJump
-            {
-                animator.SetBool("isDoubleJumping", true);
-                Jump();
-                doubleJump = true;
+                if (!doubleJump) //DoubleJump
+                {
+                    animator.SetBool("isDoubleJumping", true);
+                    jump();
+                    doubleJump = true;
+                }
+                else if (rb2d.velocity.y < 0 && doubleJump) //Minded Jump (auto-jump if button pressed before touching ground)
+                    StartCoroutine(setMindedJump());
             }
         }
         if (isJumping && rb2d.velocity.y < 0f) //is falling
@@ -68,14 +69,14 @@ public class Laurel : Player
         if (InputManager.AttackInput() && !hatThrown && !animator.GetBool("isCatching") && !animator.GetBool("isAttacking")) //Attack
         {
             attackProcessing = true;
-            CheckRangedAttack();
+            checkRangedAttack();
             animator.SetBool("isAttacking", true);
             animator.SetBool("isThrowing", true);
         }
-        CheckRangedAttack();
+        checkRangedAttack();
     }
 
-    void CheckRangedAttack()
+    void checkRangedAttack()
     {
         if (attackProcessing)
         {
@@ -116,14 +117,19 @@ public class Laurel : Player
         }
     }
 
-    //called by Laurel's hat, if player receives it
-    void SetHatThrown()
+    void setAttackStart()
     {
-        animator.SetBool("isCatching", true);
-        SetAttackEnd();
+        animator.SetBool("isThrowing", false);
     }
 
-    public void SetAttackEnd()
+    //called by Laurel's hat, if player receives it
+    void setHatThrown()
+    {
+        animator.SetBool("isCatching", true);
+        setAttackEnd();
+    }
+
+    public void setAttackEnd()
     {
         attackOffset = originAttackOffset;
         hatThrown = false; //Attack has officially ended

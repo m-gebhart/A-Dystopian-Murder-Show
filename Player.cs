@@ -10,19 +10,20 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     /* This class contains all abilities both characters share for spawning, jumping, moving, dying, scoring, etc. */
-    public Sprite Sprite; //
+    public Sprite Sprite;
     public Animator animator;
 
-    public float speed;
-    public float jumpHeight;
-    public float jumpMomentum;
+    public float speed, jumpHeight, jumpMomentum;
     public float dragInAir;
     protected float originDrag;
     public float gravityInAir;
     protected float originGravity;
 
+    protected float mindedJumpTime = 0.2f; //minded Jump: if still in air for x remaining time and Jump-Button pressed, an auto-jump is executed when 'grounded' 
+    protected bool mindedJump = false; //note: coyoteTime was also considered, but refused due to Design decisions 
+
     public bool isJumping = false;   //whether character is grounded or not
-    public Laurel LaurelScript; //
+    public Laurel LaurelScript;
     protected bool horizontalAirMove = false;
     protected bool isAlive = true;
     public bool facingRight;
@@ -34,13 +35,13 @@ public class Player : MonoBehaviour
 
 
     //spawning and setting up components, called at the beginning of the scene
-    protected void SetComponents()
+    protected void setComponents()
     {
         animator = gameObject.GetComponent<Animator>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         rb2d = gameObject.GetComponent<Rigidbody2D>();
         bc2d = gameObject.GetComponent<BoxCollider2D>();
-        SetUpAudio();
+        setUpAudio();
         manager = GameObject.Find("/Overlay/UIManager");
         playermanager = GameObject.Find("/Playermanager").GetComponent<Playermanager>();
         originDrag = rb2d.drag;
@@ -49,53 +50,50 @@ public class Player : MonoBehaviour
         InputManager.playerAlive = true;
     }
 
-    protected void CheckInput()
+    protected void checkInput()
     {
         if (InputManager.MoveRightInput()) //moveRight
         {
             if (!facingRight)
             {
-                SetRight();
+                setRight();
             }
-            Walk(true);
-          }
+            walk(true);
+        }
         else if (InputManager.MoveLeftInput()) //moveLeft
         {
             if (facingRight)
             {
-                SetLeft();
+                setLeft();
             }
-            Walk(false);
+            walk(false);
         }
         //jump momentum after letting D or A go; so if Input isn't given any more ~ similar to GetKeyUp 
         else if (isJumping)
         {
             if (facingRight && horizontalAirMove) rb2d.velocity = new Vector2(jumpMomentum, rb2d.velocity.y);
             else if (!facingRight && horizontalAirMove) rb2d.velocity = new Vector2(-jumpMomentum, rb2d.velocity.y);
-        } 
-        else GroundContact();
+        }
+        else if (rb2d.velocity.y == 0 && !isJumping)
+            GroundContact();
     }
 
     //following components just for footstep sounds
     protected AudioSource audioSource;
-    public AudioClip footstep1;
-    public AudioClip footstep2;
-    public AudioClip footstep3;
-    public AudioClip footstep4;
-    public AudioClip footstep5;
+    public AudioClip footstep1, footstep2, footstep3, footstep4, footstep5;
     private AudioClip[] footsteps;
     public bool audioStepPlaying = false;
     public float stepVolume;
     public float stepAudioDuration;
 
-    void SetUpAudio()
+    void setUpAudio()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
         footsteps = new AudioClip[5];
         footsteps[0] = footstep1; footsteps[1] = footstep2; footsteps[2] = footstep3; footsteps[3] = footstep4; footsteps[4] = footstep5;
     }
 
-    public void Walk(bool rightwards)
+    public void walk(bool rightwards)
     {
         int negator = 1;
         if (!rightwards) negator = -1;
@@ -107,26 +105,26 @@ public class Player : MonoBehaviour
         if (!audioStepPlaying && isAlive && !isJumping) {
             audioStepPlaying = true;
             audioSource.PlayOneShot(footsteps[Random.Range(0, footsteps.Length-1)], stepVolume * Volumes.effectsVol);
-            StartCoroutine(WaitUntilSoundHasEnded());
+            StartCoroutine(waitUntilSoundHasEnded());
         }
     }
 
     //so that all the steos are not played at the same time
-    IEnumerator WaitUntilSoundHasEnded()
+    IEnumerator waitUntilSoundHasEnded()
     {
         yield return new WaitForSeconds(stepAudioDuration);
         audioStepPlaying = false;
     }
 
     //setting rotation to leftwards
-    public void SetLeft()
+    public void setLeft()
     {
         transform.localRotation = Quaternion.Euler(0, 180, 0);
         facingRight = false;
     }
 
     //setting rotation to rightwards
-    public void SetRight()
+    public void setRight()
     {
         transform.localRotation = Quaternion.Euler(0, 0, 0);
         facingRight = true;
@@ -136,28 +134,30 @@ public class Player : MonoBehaviour
     public bool jumpCooldown = false;
     public float jumpCooldownTime = 0.15f;
 
-    public void Jump()
+    public void jump()
     {
+        animator.SetBool("isJumping", true);
+        animator.SetBool("midAir", true);
         jumpCooldown = true;
         rb2d.velocity = Vector2.up * jumpHeight;
         isJumping = true;
-        InAir();
-        StartCoroutine(WaitForJumpCooldown());
+        inAir();
+        StartCoroutine(waitForJumpCooldown());
     }
 
-    IEnumerator WaitForJumpCooldown()
+    IEnumerator waitForJumpCooldown()
     {
         yield return new WaitForSeconds(jumpCooldownTime);
         jumpCooldown = false;
     }
 
     //if walking from a platform, called by platform's OnCollisionExit2D
-    protected void SetFall()
+    protected void setFall()
     {
         isJumping = true;
         Laurel.doubleJump = false;
         animator.SetBool("midAir", true);
-        InAir();
+        inAir();
     }
 
     //grounded
@@ -177,12 +177,22 @@ public class Player : MonoBehaviour
         rb2d.gravityScale = originGravity;
         Laurel.doubleJump = false;
         playermanager.jumpCooldownPending = true;
+        if (mindedJump)
+            jump();
+    }
+
+    //bool for: if still in air for x remaining time and Jump-Button pressed, an auto-jump is executed when 'grounded' 
+    protected IEnumerator setMindedJump()
+    {
+        mindedJump = true;
+        yield return new WaitForSeconds(mindedJumpTime);
+        mindedJump = false;
     }
 
     public AudioClip deathSound;
     public float deathVolume;
 
-    protected void Die(string enemyKilledBy)
+    protected void die(string enemyKilledBy)
     {
         if (isAlive) //preventing double execution
         {
@@ -200,13 +210,13 @@ public class Player : MonoBehaviour
             PlayerPrefs.SetFloat("CurrentScore", Mathf.Floor(GameObject.Find("/Overlay/UIManager").GetComponent<UIManager>().score));
             PlayerPrefs.SetString("LastLevel", GameObject.Find("Exit").GetComponent<Exit>().levelName);
             PlayerPrefs.SetInt("LastLevelIndex", SceneManager.GetActiveScene().buildIndex);
-            StartCoroutine(DeathAnim());
+            StartCoroutine(deathAnim());
         }
     }
 
     public float deathAnimTime = 2f;
 
-    IEnumerator DeathAnim()
+    IEnumerator deathAnim()
     {
         animator.SetBool("dead", true);
         animator.SetBool("stayDead", true);
@@ -222,7 +232,7 @@ public class Player : MonoBehaviour
         SceneManager.LoadScene("GameOver", LoadSceneMode.Additive);
     }
 
-    public void InAir() //lossing contact to ground/platform
+    public void inAir() //lossing contact to ground/platform
     {
         if (isJumping)
         {
@@ -232,28 +242,24 @@ public class Player : MonoBehaviour
     }
 
     //rewards (basic scores diferent for each enemy type)
-    public float rewardLvl1;
-    public float rewardLvl2;
-    public float rewardLvl3;
-    public float rewardLvl4;
-    public float rewardLvl5;
+    public float rewardLvl1, rewardLvl2, rewardLvl3, rewardLvl4, rewardLvl5;
 
     public float JumpMultiplier;
     public float AttackMultiplier;
 
-    public void CheckAttackReward(int lvl) //Hardy: Hammer, Laurel: Hat
+    public void checkAttackReward(int lvl) //Hardy: Hammer, Laurel: Hat
     {
-        CheckReward(lvl, AttackMultiplier);
+        checkReward(lvl, AttackMultiplier);
     }
 
-    public void CheckJumpReward(int lvl) //if jumping on top of one enemy's head
+    public void checkJumpReward(int lvl) //if jumping on top of one enemy's head
     {
-        Jump(); //auto-jump
-        CheckReward(lvl, JumpMultiplier);
+        jump(); //auto-jump
+        checkReward(lvl, JumpMultiplier);
     }
 
     //reward / score is sent to UIManager to update current score
-    public void CheckReward(int lvl, float multiplier)
+    public void checkReward(int lvl, float multiplier)
     {
         switch (lvl)
         {

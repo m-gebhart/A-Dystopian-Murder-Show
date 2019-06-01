@@ -13,17 +13,11 @@ public class TitleScreen : MonoBehaviour {
 
     void Start()
     {
-        if (PlayerPrefs.GetFloat("MusicVolume") == null)
-        {
-            PlayerPrefs.SetFloat("MusicVolume", 1f);
-            Volumes.musicVol = 1f;
-        }
-        if (PlayerPrefs.GetFloat("EffectsVolume") == null)
-        {
-            PlayerPrefs.SetFloat("EffectsVolume", 1f);
-            Volumes.effectsVol = 1f;
-        }
-        SceneManager.LoadScene(17, LoadSceneMode.Additive);
+        PlayerPrefs.SetFloat("MusicVolume", 1f); //Setting back Musics and Volume to 1 at every start
+        Volumes.musicVol = 1f;
+        PlayerPrefs.SetFloat("EffectsVolume", 1f);
+        Volumes.effectsVol = 1f;
+        SceneManager.LoadScene(17, LoadSceneMode.Additive); //Loading Music
         PlayerPrefs.SetInt("LastScn", 0);
     }
 

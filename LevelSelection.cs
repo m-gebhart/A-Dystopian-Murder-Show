@@ -30,10 +30,9 @@ public class LevelSelection : MonoBehaviour {
     void Start()
     {
         SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(1));
-
         for (int lvl = 1; lvl < 7; lvl++)
         {
-            if (!(PlayerPrefs.GetFloat("Episode" + lvl.ToString() + "_v2", 0) > 0))
+            if (!(PlayerPrefs.GetFloat("Episode" + lvl.ToString() + "_v2", 0) > 0)) //getting highscore of level 
             {
                 int nextLvl = lvl + 1;
                 GameObject.Find("Ep. " + nextLvl.ToString()).SetActive(false);
