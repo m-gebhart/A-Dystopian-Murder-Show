@@ -8,11 +8,11 @@
 
 In A Dystopian Murder Show, a 2D action game, players control two mutants sharing one body. Trapped in deadly arenas, they try to survive against brutal hordes of monsters and get the highest score as possible. 
 
-As part of a collaboartive team, I was the main programmer being responsible for the entirety of the code.
+As part of a collaborative team, I was the main programmer being responsible for the entirety of the code.
 
 More info about my work on A Dystopian Murder Show on my <a href="https://michael-gebhart.com/projects/A_Dystopian_Murder_Show.html">portfolio website</a>.
 
-A Dystopian Murder Show on <a href="https://gemoneoo.itch.io/a-dystopian-murder-show">itch.io</a>.
+Trailer and Build of A Dystopian Murder Show on <a href="https://gemoneoo.itch.io/a-dystopian-murder-show">itch.io</a>.
 
 ## Media
 
