@@ -18,6 +18,8 @@ Trailer and Build of A Dystopian Murder Show on <a href="https://gemoneoo.itch.i
 
 ## Media
 
+Gameplay trailer on <a href="https://www.youtube.com/watch?v=6dNMNJt_RQI">YouTube</a>.
+
 ![grafik](https://user-images.githubusercontent.com/45672199/198715790-7fa06648-92ad-493f-b571-6027437f7b68.png)
 
 
