@@ -18,8 +18,14 @@ Trailer and Build of A Dystopian Murder Show on <a href="https://gemoneoo.itch.i
 
 ## Media
 
-Gameplay trailer on <a href="https://www.youtube.com/watch?v=6dNMNJt_RQI">YouTube</a>.
+### GIFs
+![Murder-Show_1](https://user-images.githubusercontent.com/45672199/200560715-e68bc5e3-8129-4d03-a987-d432db93af5a.gif)
+![Murder-Show_3](https://user-images.githubusercontent.com/45672199/200560737-4dcd6af4-1d4a-4bb4-9804-6eeb0f6368ff.gif)
 
+#### Trailer on YouTube
+[![A Dystopian Murder Show - Trailer](http://img.youtube.com/vi/6dNMNJt_RQI/0.jpg)](http://www.youtube.com/watch?v=6dNMNJt_RQI "YouTube: A Dystopian Murder Show - Trailer")
+
+#### Screenshots
 ![grafik](https://user-images.githubusercontent.com/45672199/198715790-7fa06648-92ad-493f-b571-6027437f7b68.png)
 
 
