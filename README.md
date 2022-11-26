@@ -16,6 +16,16 @@ Project page on <a href="https://colognegamelab.de/study-programs/student-projec
 
 Trailer and Build of A Dystopian Murder Show on <a href="https://gemoneoo.itch.io/a-dystopian-murder-show">itch.io</a>.
 
+## Team
+
+<ul>
+	<li>Angelo Wedel (Arts & Animation)</li>
+	<li>Ioana Sandu (Arts & Animation)</li>
+	<li>Isaac Baltsch (Game Design)</li>
+	<li>Michael Gebhart (Game Programming)</li>
+	<li>Yannick Renz (Game Design, Sound Design)</li>
+</ul>
+
 ## Media
 
 ### GIFs
